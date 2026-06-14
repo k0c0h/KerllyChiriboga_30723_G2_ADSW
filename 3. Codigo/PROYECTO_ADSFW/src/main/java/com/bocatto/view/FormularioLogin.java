@@ -2,6 +2,7 @@ package com.bocatto.view;
 
 import com.bocatto.controller.AuthController;
 import com.bocatto.model.Usuario;
+import com.bocatto.view.interfazpedidomesa.FlujoPedidoMesa;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
@@ -28,9 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
@@ -50,11 +49,11 @@ public class FormularioLogin extends JFrame {
     }
 
     private void inicializarComponentes() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        //try {
+           // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        //} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             // Se conserva el look and feel por defecto si falla el sistema.
-        }
+        //}
 
         setTitle("Sistema Bocatto - Iniciar Sesión");
         setSize(1280, 780);
@@ -180,14 +179,28 @@ public class FormularioLogin extends JFrame {
                 txtUsuario.getText().trim(),
                 new String(txtContrasena.getPassword()));
 
-        if (usuario.isPresent()) {
-            Usuario autenticado = usuario.get();
-            lblEstado.setText("Ingreso correcto como " + autenticado.getRol() + ".");
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Bienvenido, " + autenticado.getNombreCompleto() + "\nRol: " + autenticado.getRol(),
-                    "Acceso autorizado",
-                    JOptionPane.INFORMATION_MESSAGE);
+            if (usuario.isPresent()) {
+                Usuario autenticado = usuario.get();
+                lblEstado.setText("Ingreso correcto como " + autenticado.getRol() + ".");
+                
+                // Abrir interfaz según el rol
+                if ("Mesero".equalsIgnoreCase(autenticado.getRol())) {
+
+                FlujoPedidoMesa flujo =
+                        new FlujoPedidoMesa(
+                                autenticado.getNombreCompleto());
+
+                flujo.iniciar();
+
+                this.dispose();
+            } else {
+                // Comportamiento anterior para otros roles
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Bienvenido, " + autenticado.getNombreCompleto() + "\nRol: " + autenticado.getRol(),
+                        "Acceso autorizado",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         } else {
             lblEstado.setText("Usuario o contraseña incorrectos.");
             JOptionPane.showMessageDialog(
