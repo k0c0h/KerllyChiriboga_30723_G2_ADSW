@@ -1,5 +1,7 @@
 package com.bocatto.model;
 
+import java.time.LocalDateTime;
+
 public class Usuario {
 
     private String id;
@@ -8,6 +10,10 @@ public class Usuario {
     private String nombreCompleto;
     private String rol;
     private boolean activo;
+    
+    private int intentosFallidos;
+
+    private LocalDateTime tiempoDesbloqueo;
 
     public Usuario(String id, String usuario, String contrasena, String nombreCompleto, String rol, boolean activo) {
         this.id = id;
@@ -65,9 +71,39 @@ public class Usuario {
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
+    
+
+    public int getIntentosFallidos() {
+        return intentosFallidos;
+    }
+
+    public void setIntentosFallidos(int intentosFallidos) {
+        this.intentosFallidos = intentosFallidos;
+    }
+
+    public LocalDateTime getTiempoDesbloqueo() {
+        return tiempoDesbloqueo;
+    }
+
+    public void setTiempoDesbloqueo(LocalDateTime tiempoDesbloqueo) {
+        this.tiempoDesbloqueo = tiempoDesbloqueo;
+    }
 
     @Override
     public String toString() {
         return nombreCompleto + " (" + usuario + ", " + rol + ")";
     }
+
+    public String tiempoRestanteBloqueo() {
+        if (tiempoDesbloqueo == null)
+            return "";
+        long segundos = java.time.temporal.ChronoUnit.SECONDS.between(LocalDateTime.now(), tiempoDesbloqueo);
+        if (segundos <= 0)
+            return "0s";
+        long minutos = segundos / 60;
+        segundos = segundos % 60;
+        return String.format("%dm %ds", minutos, segundos);
+    }
+
+    
 }

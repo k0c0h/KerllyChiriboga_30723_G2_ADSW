@@ -1,6 +1,7 @@
 package com.bocatto.view;
 
 import com.bocatto.controller.AuthController;
+import com.bocatto.controller.ResultadoAutenticacion;
 import com.bocatto.model.Usuario;
 import com.bocatto.view.interfazpedidomesa.FlujoPedidoMesa;
 import java.awt.AlphaComposite;
@@ -175,12 +176,11 @@ public class FormularioLogin extends JFrame {
             return;
         }
 
-        Optional<Usuario> usuario = authController.autenticar(
-                txtUsuario.getText().trim(),
+        ResultadoAutenticacion resultado = authController.autenticar(txtUsuario.getText().trim(),
                 new String(txtContrasena.getPassword()));
-
-            if (usuario.isPresent()) {
-                Usuario autenticado = usuario.get();
+        
+            if (resultado.isExitoso()) {
+                Usuario autenticado = resultado.getUsuario().get();
                 lblEstado.setText("Ingreso correcto como " + autenticado.getRol() + ".");
                 
                 // Abrir interfaz según el rol
@@ -202,10 +202,10 @@ public class FormularioLogin extends JFrame {
                         JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
-            lblEstado.setText("Usuario o contraseña incorrectos.");
+            lblEstado.setText(resultado.getMensajeError());
             JOptionPane.showMessageDialog(
                     this,
-                    "Las credenciales no coinciden con los registros de prueba.",
+                    resultado.getMensajeError(),
                     "Acceso denegado",
                     JOptionPane.ERROR_MESSAGE);
         }
