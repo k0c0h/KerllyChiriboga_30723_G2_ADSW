@@ -3,6 +3,10 @@ package com.bocatto.view;
 import com.bocatto.controller.AuthController;
 import com.bocatto.controller.ResultadoAutenticacion;
 import com.bocatto.model.Usuario;
+import com.bocatto.repository.MenuRepository;
+import com.bocatto.repository.MenuRepositoryMemoria;
+import com.bocatto.repository.PedidoRepository;
+import com.bocatto.repository.PedidoRepositoryMemoria;
 import com.bocatto.view.interfazpedidomesa.FlujoPedidoMesa;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -43,8 +47,13 @@ public class FormularioLogin extends JFrame {
     private JLabel lblContrasenaError;
     private JLabel lblEstado;
 
+    private MenuRepository menuRepository;
+    private PedidoRepository pedidoRepository;
+
     public FormularioLogin(AuthController authController) {
         this.authController = authController;
+        this.menuRepository = new MenuRepositoryMemoria();
+        this.pedidoRepository = new PedidoRepositoryMemoria();
         inicializarComponentes();
         configurarEventos();
     }
@@ -188,7 +197,7 @@ public class FormularioLogin extends JFrame {
 
                 FlujoPedidoMesa flujo =
                         new FlujoPedidoMesa(
-                                autenticado.getNombreCompleto());
+                                autenticado.getNombreCompleto(), menuRepository, pedidoRepository);
 
                 flujo.iniciar();
 

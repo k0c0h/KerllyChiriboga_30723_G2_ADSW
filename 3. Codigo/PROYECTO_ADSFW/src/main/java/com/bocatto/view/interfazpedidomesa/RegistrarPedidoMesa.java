@@ -1,20 +1,43 @@
 package com.bocatto.view.interfazpedidomesa;
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import com.bocatto.controller.PedidoController;
+import com.bocatto.model.*;
+import com.bocatto.model.Menu;
+import com.bocatto.repository.MenuRepository;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RegistrarPedidoMesa extends JFrame {
+
     private String nombreMesero;
     private int mesaSeleccionada;
-    private Map<String, java.util.List<JPanel>> productosMap;
+    private MenuRepository menuRepository;
+    private PedidoController pedidoController;
 
-    public RegistrarPedidoMesa(String nombreMesero, int mesaSeleccionada) {
+    private Map<String, List<JPanel>> categoriasPanels;
+    private JPanel panelProductos;
+    private JPanel panelCarrito;
+    private JLabel labelTotalCarrito;
+    private JTextArea areaObservaciones;
+    private JButton btnEnviar;
+
+    private List<ItemPedido> carrito = new ArrayList<>();
+    private Map<Menu, JLabel> cantidadesLabels = new HashMap<>();
+
+    public RegistrarPedidoMesa(String nombreMesero, int mesaSeleccionada,
+            MenuRepository menuRepository, PedidoController pedidoController) {
         this.nombreMesero = nombreMesero;
         this.mesaSeleccionada = mesaSeleccionada;
-        this.productosMap = new HashMap<>();
+        this.menuRepository = menuRepository;
+        this.pedidoController = pedidoController;
+        this.categoriasPanels = new HashMap<>();
         inicializarComponentes();
     }
 
@@ -28,7 +51,7 @@ public class RegistrarPedidoMesa extends JFrame {
         JPanel panelPrincipal = new JPanel(new BorderLayout());
         panelPrincipal.setBackground(new Color(30, 30, 30));
         panelPrincipal.add(crearPanelSuperior(), BorderLayout.NORTH);
-        panelPrincipal.add(crearPanelProductos(), BorderLayout.CENTER);
+        panelPrincipal.add(crearPanelCentral(), BorderLayout.CENTER);
         panelPrincipal.add(crearPanelInferior(), BorderLayout.SOUTH);
         add(panelPrincipal);
     }
@@ -46,7 +69,7 @@ public class RegistrarPedidoMesa extends JFrame {
 
         JLabel labelTitulo = new JLabel("Registrar Pedido · Mesa " + mesaSeleccionada);
         labelTitulo.setFont(new Font("Arial", Font.BOLD, 24));
-        labelTitulo.setForeground(new Color(255, 255, 255));
+        labelTitulo.setForeground(Color.WHITE);
 
         panelIzquierdo.add(btnAtras);
         panelIzquierdo.add(labelTitulo);
@@ -58,147 +81,257 @@ public class RegistrarPedidoMesa extends JFrame {
         labelUsuario.setFont(new Font("Arial", Font.PLAIN, 14));
         labelUsuario.setForeground(new Color(200, 150, 100));
 
-        JButton btnTotal = new JButton("🛒 $0.00");
-        btnTotal.setFont(new Font("Arial", Font.BOLD, 14));
-        btnTotal.setBackground(new Color(255, 165, 0));
-        btnTotal.setForeground(Color.BLACK);
-        btnTotal.setBorderPainted(false);
-        btnTotal.setFocusPainted(false);
-        btnTotal.setPreferredSize(new Dimension(120, 40));
-        btnTotal.setEnabled(false);
-
         panelDerecho.add(labelUsuario);
-        panelDerecho.add(btnTotal);
         panel.add(panelIzquierdo, BorderLayout.WEST);
         panel.add(panelDerecho, BorderLayout.EAST);
         return panel;
     }
 
-    private JPanel crearPanelProductos() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(30, 30, 30));
-        panel.setBorder(new EmptyBorder(30, 40, 30, 40));
+    private JPanel crearPanelCentral() {
+        JPanel panelCentral = new JPanel(new BorderLayout(10, 0));
+        panelCentral.setBackground(new Color(30, 30, 30));
+        panelCentral.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        JPanel panelCategorias = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
+        // Panel izquierdo: categorías y productos
+        JPanel panelIzquierdo = new JPanel(new BorderLayout());
+        panelIzquierdo.setBackground(new Color(30, 30, 30));
+
+        // Botones de categoría
+        JPanel panelCategorias = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         panelCategorias.setBackground(new Color(30, 30, 30));
-
-        String[] categorias = {"Entradas", "Platos Fuertes", "Pizzas", "Postres", "Bebidas"};
-        for (String categoria : categorias) {
-            panelCategorias.add(crearBotonCategoria(categoria, categoria.equals("Entradas")));
+        List<String> categorias = menuRepository.listarCategorias();
+        for (String cat : categorias) {
+            JButton btnCat = crearBotonCategoria(cat);
+            btnCat.addActionListener(e -> mostrarProductosCategoria(cat));
+            panelCategorias.add(btnCat);
         }
+        panelIzquierdo.add(panelCategorias, BorderLayout.NORTH);
 
-        JPanel panelProductosScroll = new JPanel();
-        panelProductosScroll.setBackground(new Color(30, 30, 30));
-        panelProductosScroll.setLayout(new BoxLayout(panelProductosScroll, BoxLayout.Y_AXIS));
-        panelProductosScroll.add(crearProducto("Bruschetta al Tomate", "Pan tostado con tomate y albahaca", "$5.50"));
-        panelProductosScroll.add(crearProducto("Tabla de Quesos", "Selección de quesos artesanales", "$8.00"));
-        panelProductosScroll.add(crearProducto("Calamares a la Romana", "Calamares fritos con alioli", "$7.50"));
+        // Panel de productos (scroll)
+        panelProductos = new JPanel();
+        panelProductos.setLayout(new BoxLayout(panelProductos, BoxLayout.Y_AXIS));
+        panelProductos.setBackground(new Color(30, 30, 30));
 
-        JScrollPane scrollPane = new JScrollPane(panelProductosScroll);
-        scrollPane.setBackground(new Color(30, 30, 30));
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getViewport().setBackground(new Color(30, 30, 30));
-        scrollPane.getVerticalScrollBar().setBackground(new Color(50, 50, 50));
-        scrollPane.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
-            @Override
-            protected void configureScrollBarColors() {
-                this.thumbColor = new Color(100, 100, 100);
-            }
-        });
+        JScrollPane scrollProductos = new JScrollPane(panelProductos);
+        scrollProductos.setBorder(BorderFactory.createEmptyBorder());
+        scrollProductos.getViewport().setBackground(new Color(30, 30, 30));
+        scrollProductos.setPreferredSize(new Dimension(750, 0));
 
-        panel.add(panelCategorias, BorderLayout.NORTH);
-        panel.add(scrollPane, BorderLayout.CENTER);
-        return panel;
+        panelIzquierdo.add(scrollProductos, BorderLayout.CENTER);
+        panelCentral.add(panelIzquierdo, BorderLayout.CENTER);
+
+        // Panel derecho: carrito
+        JPanel panelDerecho = crearPanelCarrito();
+        panelDerecho.setPreferredSize(new Dimension(400, 0));
+        panelCentral.add(panelDerecho, BorderLayout.EAST);
+
+        return panelCentral;
     }
 
-    private JPanel crearProducto(String nombre, String descripcion, String precio) {
+    private void mostrarProductosCategoria(String categoria) {
+        panelProductos.removeAll();
+        List<Menu> productos = menuRepository.buscarPorCategoria(categoria);
+        for (Menu menu : productos) {
+            panelProductos.add(crearPanelProducto(menu));
+        }
+        panelProductos.revalidate();
+        panelProductos.repaint();
+    }
+
+    private JPanel crearPanelProducto(Menu menu) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(30, 30, 30));
         panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(60, 60, 60)));
-        panel.setBorder(new EmptyBorder(25, 25, 25, 25));
-        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
+        panel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
 
         JPanel panelInfo = new JPanel(new BorderLayout());
         panelInfo.setBackground(new Color(30, 30, 30));
 
-        JLabel labelNombre = new JLabel(nombre);
-        labelNombre.setFont(new Font("Arial", Font.BOLD, 15));
-        labelNombre.setForeground(new Color(255, 255, 255));
+        JLabel lblNombre = new JLabel(menu.getNombre());
+        lblNombre.setFont(new Font("Arial", Font.BOLD, 15));
+        lblNombre.setForeground(Color.WHITE);
 
-        JLabel labelDescripcion = new JLabel(descripcion);
-        labelDescripcion.setFont(new Font("Arial", Font.PLAIN, 13));
-        labelDescripcion.setForeground(new Color(150, 150, 150));
+        JLabel lblDescripcion = new JLabel(menu.getDescripcion());
+        lblDescripcion.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblDescripcion.setForeground(new Color(150, 150, 150));
 
-        JPanel panelTexto = new JPanel(new BorderLayout());
-        panelTexto.setBackground(new Color(30, 30, 30));
-        panelTexto.add(labelNombre, BorderLayout.NORTH);
-        panelTexto.add(labelDescripcion, BorderLayout.CENTER);
+        JLabel lblPrecio = new JLabel("$" + menu.getPrecio());
+        lblPrecio.setFont(new Font("Arial", Font.BOLD, 14));
+        lblPrecio.setForeground(new Color(255, 165, 0));
 
-        JLabel labelPrecio = new JLabel(precio);
-        labelPrecio.setFont(new Font("Arial", Font.BOLD, 16));
-        labelPrecio.setForeground(new Color(255, 165, 0));
+        panelInfo.add(lblNombre, BorderLayout.NORTH);
+        panelInfo.add(lblDescripcion, BorderLayout.CENTER);
 
-        JButton btnAgregar = new JButton("+");
-        btnAgregar.setFont(new Font("Arial", Font.BOLD, 22));
+        JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        panelAcciones.setBackground(new Color(30, 30, 30));
+
+        JButton btnAgregar = new JButton("+ Agregar");
+        btnAgregar.setFont(new Font("Arial", Font.BOLD, 13));
         btnAgregar.setBackground(new Color(255, 165, 0));
         btnAgregar.setForeground(Color.BLACK);
-        btnAgregar.setBorderPainted(false);
         btnAgregar.setFocusPainted(false);
-        btnAgregar.setPreferredSize(new Dimension(60, 60));
-        btnAgregar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnAgregar.setBorderPainted(false);
+        btnAgregar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        btnAgregar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnAgregar.setBackground(new Color(255, 200, 0));
-            }
+        btnAgregar.addActionListener(e -> agregarAlCarrito(menu));
 
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                btnAgregar.setBackground(new Color(255, 165, 0));
-            }
-        });
+        panelAcciones.add(lblPrecio);
+        panelAcciones.add(btnAgregar);
 
-        JPanel panelDerechos = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 0));
-        panelDerechos.setBackground(new Color(30, 30, 30));
-        panelDerechos.add(labelPrecio);
-        panelDerechos.add(btnAgregar);
-
-        panel.add(panelTexto, BorderLayout.WEST);
-        panel.add(panelDerechos, BorderLayout.EAST);
+        panel.add(panelInfo, BorderLayout.WEST);
+        panel.add(panelAcciones, BorderLayout.EAST);
         return panel;
     }
 
-    private JButton crearBotonCategoria(String nombre, boolean seleccionado) {
-        JButton boton = new JButton(nombre);
-        boton.setFont(new Font("Arial", Font.BOLD, 12));
-        if (seleccionado) {
-            boton.setBackground(new Color(255, 165, 0));
-            boton.setForeground(Color.BLACK);
-        } else {
-            boton.setBackground(new Color(70, 70, 70));
-            boton.setForeground(new Color(220, 220, 220));
+    private JPanel crearPanelCarrito() {
+        JPanel panel = new JPanel(new BorderLayout(0, 10));
+        panel.setBackground(new Color(45, 45, 45));
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(100, 100, 100), 2),
+                new EmptyBorder(15, 15, 15, 15)));
+
+        JLabel lblTitulo = new JLabel("🛒 Carrito");
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
+        lblTitulo.setForeground(Color.WHITE);
+
+        panelCarrito = new JPanel();
+        panelCarrito.setLayout(new BoxLayout(panelCarrito, BoxLayout.Y_AXIS));
+        panelCarrito.setBackground(new Color(45, 45, 45));
+
+        JScrollPane scrollCarrito = new JScrollPane(panelCarrito);
+        scrollCarrito.setBorder(BorderFactory.createEmptyBorder());
+        scrollCarrito.getViewport().setBackground(new Color(45, 45, 45));
+        scrollCarrito.setPreferredSize(new Dimension(380, 200));
+
+        // Observaciones generales
+        JPanel panelObservaciones = new JPanel(new BorderLayout());
+        panelObservaciones.setBackground(new Color(45, 45, 45));
+        JLabel lblObs = new JLabel("Observaciones:");
+        lblObs.setForeground(Color.WHITE);
+        areaObservaciones = new JTextArea(3, 20);
+        areaObservaciones.setBackground(new Color(60, 60, 60));
+        areaObservaciones.setForeground(Color.WHITE);
+        areaObservaciones.setLineWrap(true);
+        areaObservaciones.setWrapStyleWord(true);
+        JScrollPane scrollObs = new JScrollPane(areaObservaciones);
+        scrollObs.setBorder(BorderFactory.createEmptyBorder());
+        panelObservaciones.add(lblObs, BorderLayout.NORTH);
+        panelObservaciones.add(scrollObs, BorderLayout.CENTER);
+
+        // Total
+        JPanel panelTotal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelTotal.setBackground(new Color(45, 45, 45));
+        labelTotalCarrito = new JLabel("Total: $0.00");
+        labelTotalCarrito.setFont(new Font("Arial", Font.BOLD, 16));
+        labelTotalCarrito.setForeground(new Color(255, 165, 0));
+        panelTotal.add(labelTotalCarrito);
+
+        panel.add(lblTitulo, BorderLayout.NORTH);
+        panel.add(scrollCarrito, BorderLayout.CENTER);
+        panel.add(panelObservaciones, BorderLayout.SOUTH);
+        panel.add(panelTotal, BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private void agregarAlCarrito(Menu menu) {
+        // Preguntar cantidad y observación (opcional)
+        JTextField txtCantidad = new JTextField("1");
+        JTextField txtObs = new JTextField();
+
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(new JLabel("Cantidad:"));
+        panel.add(txtCantidad);
+        panel.add(new JLabel("Observación (opcional):"));
+        panel.add(txtObs);
+
+        int result = JOptionPane.showConfirmDialog(this, panel, "Agregar " + menu.getNombre(),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            int cantidad;
+            try {
+                cantidad = Integer.parseInt(txtCantidad.getText().trim());
+                if (cantidad <= 0)
+                    throw new NumberFormatException();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Cantidad inválida.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String observacion = txtObs.getText().trim();
+            if (observacion.isEmpty())
+                observacion = "";
+
+            ItemPedido item = new ItemPedido(menu, cantidad, observacion);
+            carrito.add(item);
+            actualizarCarrito();
+        }
+    }
+
+    private void actualizarCarrito() {
+        panelCarrito.removeAll();
+        cantidadesLabels.clear();
+
+        for (ItemPedido item : carrito) {
+            JPanel itemPanel = new JPanel(new BorderLayout());
+            itemPanel.setBackground(new Color(45, 45, 45));
+            itemPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            itemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+
+            String texto = item.getMenu().getNombre() + " x" + item.getCantidad();
+            if (!item.getObservacion().isEmpty()) {
+                texto += " (" + item.getObservacion() + ")";
+            }
+            JLabel lblItem = new JLabel(texto);
+            lblItem.setForeground(Color.WHITE);
+            lblItem.setFont(new Font("Arial", Font.PLAIN, 13));
+
+            JButton btnEliminar = new JButton("X");
+            btnEliminar.setFont(new Font("Arial", Font.BOLD, 10));
+            btnEliminar.setBackground(Color.RED);
+            btnEliminar.setForeground(Color.WHITE);
+            btnEliminar.setBorderPainted(false);
+            btnEliminar.setFocusPainted(false);
+            btnEliminar.setMargin(new Insets(0, 5, 0, 5));
+            btnEliminar.addActionListener(e -> {
+                carrito.remove(item);
+                actualizarCarrito();
+            });
+
+            itemPanel.add(lblItem, BorderLayout.CENTER);
+            itemPanel.add(btnEliminar, BorderLayout.EAST);
+            panelCarrito.add(itemPanel);
         }
 
-        boton.setBorderPainted(true);
-        boton.setBorder(BorderFactory.createLineBorder(
-            seleccionado ? new Color(255, 200, 0) : new Color(90, 90, 90), 2
-        ));
+        // Actualizar total
+        BigDecimal total = carrito.stream()
+                .map(item -> item.getMenu().getPrecio().multiply(BigDecimal.valueOf(item.getCantidad())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        labelTotalCarrito.setText("Total: $" + total);
+
+        panelCarrito.revalidate();
+        panelCarrito.repaint();
+
+        // Habilitar/deshabilitar botón enviar según si hay items
+        btnEnviar.setEnabled(!carrito.isEmpty());
+    }
+
+    private JButton crearBotonCategoria(String nombre) {
+        JButton boton = new JButton(nombre);
+        boton.setFont(new Font("Arial", Font.BOLD, 12));
+        boton.setBackground(new Color(70, 70, 70));
+        boton.setForeground(new Color(220, 220, 220));
+        boton.setBorder(BorderFactory.createLineBorder(new Color(90, 90, 90), 2));
         boton.setFocusPainted(false);
         boton.setPreferredSize(new Dimension(120, 40));
-        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         boton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                if (!boton.getBackground().equals(new Color(255, 165, 0))) {
-                    boton.setBackground(new Color(100, 100, 100));
-                    boton.setForeground(new Color(255, 255, 255));
-                }
+                boton.setBackground(new Color(100, 100, 100));
             }
 
             public void mouseExited(java.awt.event.MouseEvent e) {
-                if (!boton.getBackground().equals(new Color(255, 165, 0))) {
-                    boton.setBackground(new Color(70, 70, 70));
-                    boton.setForeground(new Color(220, 220, 220));
-                }
+                boton.setBackground(new Color(70, 70, 70));
             }
         });
         return boton;
@@ -212,11 +345,53 @@ public class RegistrarPedidoMesa extends JFrame {
         JButton btnCancelar = crearBotonAccion("Cancelar", new Color(100, 100, 100));
         btnCancelar.addActionListener(e -> dispose());
 
-        JButton btnEnviar = crearBotonAccion("Enviar a Cocina", new Color(50, 150, 50));
+        btnEnviar = crearBotonAccion("Enviar a Cocina", new Color(50, 150, 50));
+        btnEnviar.setEnabled(false); // inicialmente deshabilitado
+        btnEnviar.addActionListener(e -> enviarPedido());
 
         panel.add(btnCancelar);
         panel.add(btnEnviar);
         return panel;
+    }
+
+    private void enviarPedido() {
+        if (carrito.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Agregue al menos un producto.", "Pedido vacío",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Crear el cliente para la mesa
+        Cliente clienteMesa = new Cliente("mesa-" + mesaSeleccionada, "Mesa " + mesaSeleccionada, "", "", "");
+
+        // Generar un ID simple (puede ser UUID en producción)
+        String idPedido = "PED-" + System.currentTimeMillis();
+
+        // Crear el pedido
+        Pedido pedido = new Pedido(idPedido, clienteMesa, "Mesa", mesaSeleccionada,
+                areaObservaciones.getText().trim());
+
+        // Agregar los items al pedido
+        for (ItemPedido item : carrito) {
+            pedido.agregarItem(item);
+        }
+
+        pedido.setUsuarioAsignado(nombreMesero);
+
+        // Validar y guardar
+        boolean creado = pedidoController.crearPedido(pedido);
+        if (creado) {
+            JOptionPane.showMessageDialog(this,
+                    "Pedido registrado correctamente.\nID: " + idPedido,
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "El pedido no pudo ser registrado. Revise los datos.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private JButton crearBotonAccion(String texto, Color color) {
@@ -227,8 +402,7 @@ public class RegistrarPedidoMesa extends JFrame {
         boton.setBorderPainted(false);
         boton.setFocusPainted(false);
         boton.setPreferredSize(new Dimension(150, 40));
-        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         boton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 boton.setBackground(color.brighter());
@@ -246,12 +420,10 @@ public class RegistrarPedidoMesa extends JFrame {
         boton.setFont(new Font("Arial", Font.PLAIN, 12));
         boton.setBackground(new Color(80, 80, 80));
         boton.setForeground(Color.WHITE);
-        boton.setBorderPainted(true);
         boton.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100), 1));
         boton.setFocusPainted(false);
         boton.setPreferredSize(new Dimension(80, 35));
-        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         boton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 boton.setBackground(new Color(120, 120, 120));

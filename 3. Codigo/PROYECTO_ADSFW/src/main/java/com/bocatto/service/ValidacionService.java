@@ -13,8 +13,8 @@ public class ValidacionService {
             errores.add("El cliente es obligatorio.");
         }
 
-        if (pedido.getItems().isEmpty()) {
-            errores.add("El pedido debe contener al menos un item.");
+        if (pedido.getItems() == null || pedido.getItems().isEmpty()) {
+            errores.add("El pedido debe contener al menos un ítem.");
         }
 
         if (pedido.getTipoEntrega() == null || pedido.getTipoEntrega().trim().isEmpty()) {

@@ -9,21 +9,49 @@ public class Pedido {
 
     private String id;
     private Cliente cliente;
-    private final List<Menu> items;
+    private List<ItemPedido> items; // antes: List<Menu>
     private BigDecimal total;
     private String estado;
     private LocalDateTime fecha;
     private String usuarioAsignado;
     private String tipoEntrega;
+    private int numeroMesa; // nuevo campo
+    private String observaciones; // nuevo campo (observaciones generales del pedido)
 
-    public Pedido(String id, Cliente cliente, String tipoEntrega) {
+    // Constructor adaptado: ahora recibe el número de mesa y las observaciones
+    public Pedido(String id, Cliente cliente, String tipoEntrega, int numeroMesa, String observaciones) {
         this.id = id;
         this.cliente = cliente;
         this.items = new ArrayList<>();
         this.total = BigDecimal.ZERO;
-        this.estado = "PENDIENTE";
+        this.estado = "pendiente";
         this.fecha = LocalDateTime.now();
         this.tipoEntrega = tipoEntrega;
+        this.numeroMesa = numeroMesa;
+        this.observaciones = observaciones;
+    }
+
+    // Getters y setters existentes (id, cliente, estado, etc.) se mantienen igual
+
+    public List<ItemPedido> getItems() {
+        return items;
+    }
+
+    // Método para agregar un ItemPedido
+    public void agregarItem(ItemPedido item) {
+        items.add(item);
+        recalcularTotal();
+    }
+
+    // Recalcular total basado en ItemPedido
+    private void recalcularTotal() {
+        this.total = items.stream()
+                .map(item -> item.getMenu().getPrecio().multiply(BigDecimal.valueOf(item.getCantidad())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getTotal() {
+        return total;
     }
 
     public String getId() {
@@ -40,29 +68,6 @@ public class Pedido {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
-    }
-
-    public List<Menu> getItems() {
-        return items;
-    }
-
-    public void agregarItem(Menu item) {
-        items.add(item);
-        recalcularTotal();
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
-    private void recalcularTotal() {
-        this.total = items.stream()
-                .map(Menu::getPrecio)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public String getEstado() {
@@ -97,8 +102,24 @@ public class Pedido {
         this.tipoEntrega = tipoEntrega;
     }
 
+    public int getNumeroMesa() {
+        return numeroMesa;
+    }
+
+    public void setNumeroMesa(int numeroMesa) {
+        this.numeroMesa = numeroMesa;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
     @Override
     public String toString() {
-        return "Pedido [" + id + "] - " + cliente.getNombre() + " - $" + total + " (" + estado + ")";
+        return "Pedido [" + id + "] - Mesa " + numeroMesa + " - $" + total + " (" + estado + ")";
     }
 }
