@@ -3,7 +3,7 @@ package com.bocatto.model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PrototypeRegistry {
+public class PromocionPrototypeRegistry {
     private Map<String, Promocion> prototipos = new HashMap<>();
 
     public void agregarPrototipo(String clave, Promocion promocion) {
