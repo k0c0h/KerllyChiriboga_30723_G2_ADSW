@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RegistrarPedidoMesa extends JFrame {
 
@@ -31,6 +32,9 @@ public class RegistrarPedidoMesa extends JFrame {
     private List<ItemPedido> carrito = new ArrayList<>();
     private Map<Menu, JLabel> cantidadesLabels = new HashMap<>();
 
+    private PedidoBuilder pedidoBuilder = new PedidoBuilder();
+    private MenuPrototypeRegistry menuPrototypeRegistry = new MenuPrototypeRegistry();
+
     public RegistrarPedidoMesa(String nombreMesero, int mesaSeleccionada,
             MenuRepository menuRepository, PedidoController pedidoController) {
         this.nombreMesero = nombreMesero;
@@ -38,6 +42,11 @@ public class RegistrarPedidoMesa extends JFrame {
         this.menuRepository = menuRepository;
         this.pedidoController = pedidoController;
         this.categoriasPanels = new HashMap<>();
+
+        for (Menu menu : menuRepository.listar()) {
+            menuPrototypeRegistry.agregarPrototipo(menu.getId(), menu);
+        }
+
         inicializarComponentes();
     }
 
@@ -137,7 +146,7 @@ public class RegistrarPedidoMesa extends JFrame {
         panelProductos.revalidate();
         panelProductos.repaint();
     }
-
+    
     private JPanel crearPanelProducto(Menu menu) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(30, 30, 30));
@@ -262,7 +271,9 @@ public class RegistrarPedidoMesa extends JFrame {
             if (observacion.isEmpty())
                 observacion = "";
 
-            ItemPedido item = new ItemPedido(menu, cantidad, observacion);
+            // Clonar el menú usando el prototipo registrado
+            Menu clon = menuPrototypeRegistry.obtenerClon(menu.getId());
+            ItemPedido item = new ItemPedido(clon, cantidad, observacion);
             carrito.add(item);
             actualizarCarrito();
         }
@@ -361,36 +372,37 @@ public class RegistrarPedidoMesa extends JFrame {
             return;
         }
 
-        // Crear el cliente para la mesa
+        // Crear cliente para la mesa
         Cliente clienteMesa = new Cliente("mesa-" + mesaSeleccionada, "Mesa " + mesaSeleccionada, "", "", "");
 
-        // Generar un ID simple (puede ser UUID en producción)
-        String idPedido = "PED-" + System.currentTimeMillis();
+        // Usar el builder
+        pedidoBuilder.withCliente(clienteMesa)
+                .withTipoEntrega("Mesa")
+                .withNumeroMesa(mesaSeleccionada)
+                .withObservaciones(areaObservaciones.getText().trim())
+                .withUsuarioAsignado(nombreMesero);
 
-        // Crear el pedido
-        Pedido pedido = new Pedido(idPedido, clienteMesa, "Mesa", mesaSeleccionada,
-                areaObservaciones.getText().trim());
-
-        // Agregar los items al pedido
         for (ItemPedido item : carrito) {
-            pedido.agregarItem(item);
+            pedidoBuilder.agregarItem(item);
         }
 
-        pedido.setUsuarioAsignado(nombreMesero);
-
-        // Validar y guardar
-        boolean creado = pedidoController.crearPedido(pedido);
-        if (creado) {
-            JOptionPane.showMessageDialog(this,
-                    "Pedido registrado correctamente.\nID: " + idPedido,
-                    "Éxito",
-                    JOptionPane.INFORMATION_MESSAGE);
-            dispose();
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "El pedido no pudo ser registrado. Revise los datos.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+        try {
+            Pedido pedido = pedidoBuilder.build();
+            boolean creado = pedidoController.crearPedido(pedido);
+            if (creado) {
+                JOptionPane.showMessageDialog(this,
+                        "Pedido registrado correctamente.\nID: " + pedido.getId(),
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "El pedido no pudo ser registrado. Revise los datos.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (IllegalStateException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de validación", JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -2,7 +2,7 @@ package com.bocatto.model;
 
 import java.math.BigDecimal;
 
-public class Menu {
+public class Menu implements Cloneable {
 
     private String id;
     private String nombre;
@@ -66,6 +66,15 @@ public class Menu {
 
     public void setDisponibilidad(int disponibilidad) {
         this.disponibilidad = disponibilidad;
+    }
+
+    @Override
+    public Menu clone() {
+        try {
+            return (Menu) super.clone(); // clonación superficial suficiente
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Menu no es clonable", e);
+        }
     }
 
     @Override
