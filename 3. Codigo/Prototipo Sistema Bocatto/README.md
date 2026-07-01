@@ -1,7 +1,7 @@
 
   # Prototipo Sistema Bocatto
 
-  This is a code bundle for Prototipo Sistema Bocatto. The original project is available at https://www.figma.com/design/QlX4kqBzNH3FVSbLJ2swbE/Prototipo-Sistema-Bocatto.
+En linea se lo puede ejecutar por: https://serene-atom-41025790.figma.site/
 
   ## Running the code
 
