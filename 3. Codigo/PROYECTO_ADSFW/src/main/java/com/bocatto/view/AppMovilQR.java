@@ -1,4 +1,4 @@
-package main.java.com.bocatto.view;
+package com.bocatto.view;
 
 public class AppMovilQR {
     
