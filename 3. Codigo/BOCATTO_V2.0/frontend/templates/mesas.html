@@ -1,0 +1,123 @@
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold">
+
+            Gestión de Mesas
+
+        </h2>
+
+        <button class="btn btn-warning" id="btnNuevaMesa">
+
+            <i class="bi bi-plus-circle"></i>
+
+            Nueva Mesa
+
+        </button>
+
+    </div>
+
+    <div id="contenedorMesas" class="row g-4">
+
+    </div>
+
+</div>
+
+<!-- Modal -->
+
+<div class="modal fade" id="modalMesa">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>
+
+                    Mesa
+
+                </h5>
+
+                <button class="btn-close" data-bs-dismiss="modal">
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form id="formMesa">
+
+                    <input type="hidden" id="mesaId">
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Número
+
+                        </label>
+
+                        <input type="number" class="form-control" id="mesaNumero">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Capacidad
+
+                        </label>
+
+                        <input type="number" class="form-control" id="mesaCapacidad">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Estado
+
+                        </label>
+
+                        <select class="form-select" id="mesaEstado">
+
+                            <option>LIBRE</option>
+
+                            <option>OCUPADA</option>
+
+                            <option>RESERVADA</option>
+
+                        </select>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+                <button class="btn btn-warning" id="btnGuardarMesa">
+
+                    Guardar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

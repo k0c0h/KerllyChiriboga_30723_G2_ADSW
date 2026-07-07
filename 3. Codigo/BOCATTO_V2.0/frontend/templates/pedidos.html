@@ -1,0 +1,171 @@
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- PRODUCTOS -->
+
+        <div class="col-lg-8">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    <div class="d-flex justify-content-between">
+
+                        <h4>
+
+                            Menú
+
+                        </h4>
+
+                        <input
+                            class="form-control w-25"
+                            id="txtBuscarProductoPedido"
+                            placeholder="Buscar...">
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="card-body">
+
+                    <div
+                        class="row g-3"
+                        id="productosPedido">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PEDIDO -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-warning">
+
+                    <h5>
+
+                        Pedido
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Canal
+
+                        </label>
+
+                        <select class="form-select" id="canalPedido">
+                            <option value="MESA">Mesa</option>
+                            <option value="TELEFONO">Telefónico</option>
+                            <option value="QR">QR</option>
+                        </select>
+
+                    </div>
+
+                    <div id="camposTelefono" style="display:none;">
+
+                        <div class="mb-2">
+                            <label class="form-label">Teléfono</label>
+                            <input id="telefonoEntrega" class="form-control" placeholder="0999999999">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Dirección</label>
+                            <input id="direccionEntrega" class="form-control" placeholder="Dirección de entrega">
+                        </div>
+
+                    </div>
+
+                    <h4 id="tituloMesa">
+
+                        Mesa
+
+                    </h4>
+
+                    <table
+                        class="table">
+
+                        <thead>
+
+                        <tr>
+
+                            <th>
+
+                                Producto
+
+                            </th>
+
+                            <th>
+
+                                Cant.
+
+                            </th>
+
+                            <th>
+
+                                $
+
+                            </th>
+
+                            <th>
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody
+                            id="detallePedido">
+
+                        </tbody>
+
+                    </table>
+
+                    <hr>
+
+                    <h3>
+
+                        Total:
+
+                        $
+
+                        <span id="lblTotal">
+
+                            0.00
+
+                        </span>
+
+                    </h3>
+
+                    <button
+                        class="btn btn-success w-100 mt-3"
+                        id="btnGuardarPedido">
+
+                        Guardar Pedido
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

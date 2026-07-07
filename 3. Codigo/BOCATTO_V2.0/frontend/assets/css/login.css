@@ -1,0 +1,25 @@
+body{
+
+    background:#f8f5f2;
+
+}
+
+.card{
+
+    border-radius:20px;
+
+}
+
+.btn-warning{
+
+    background:#d97706;
+
+    border:none;
+
+}
+
+.btn-warning:hover{
+
+    background:#b45309;
+
+}

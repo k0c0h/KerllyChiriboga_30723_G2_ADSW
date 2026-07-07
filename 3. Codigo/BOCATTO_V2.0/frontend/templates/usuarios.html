@@ -1,0 +1,191 @@
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold">
+
+            Gestión de Usuarios
+
+        </h2>
+
+        <button class="btn btn-warning" id="btnNuevo">
+
+            <i class="bi bi-plus-circle"></i>
+
+            Nuevo Usuario
+
+        </button>
+
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+
+                <div class="col-md-4">
+
+                    <input class="form-control" id="txtBuscar" placeholder="Buscar usuario...">
+
+                </div>
+
+            </div>
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Nombre</th>
+
+                        <th>Usuario</th>
+
+                        <th>Rol</th>
+
+                        <th width="180">
+
+                            Acciones
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tbodyUsuarios">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal -->
+
+<div class="modal fade" id="modalUsuario">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>
+
+                    Usuario
+
+                </h5>
+
+                <button class="btn-close" data-bs-dismiss="modal">
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form id="formUsuario">
+
+                    <input type="hidden" id="id">
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Nombre
+
+                        </label>
+
+                        <input class="form-control" id="nombre">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Apellido
+
+                        </label>
+
+                        <input class="form-control" id="apellido">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Usuario
+
+                        </label>
+
+                        <input class="form-control" id="username">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Contraseña
+
+                        </label>
+
+                        <input type="password" class="form-control" id="password">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Rol
+
+                        </label>
+
+                        <select class="form-select" id="rol">
+
+                            <option>ADMIN</option>
+
+                            <option>MESERO</option>
+
+                            <option>COCINA</option>
+
+                            <option>CAJA</option>
+
+                        </select>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+                <button id="btnGuardar" class="btn btn-warning">
+
+                    Guardar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
