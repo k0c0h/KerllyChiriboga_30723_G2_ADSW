@@ -1,0 +1,262 @@
+body {
+    background: radial-gradient(circle at center, #261611 0%, #110502 100%);
+    font-family: 'Outfit', sans-serif;
+    color: #e6dfdb;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* === NUEVO: Agregamos esto para centrar el bloque del logo completo === */
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* === MODIFICADO: Cambiamos margin-bottom por un margin que centra horizontalmente === */
+.logo-badge {
+    width: 90px;
+    height: 90px;
+    background-color: #ff9800;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
+    margin: 0 auto 20px auto;
+    /* Arriba: 0, Lados: auto (centrado), Abajo: 20px */
+}
+
+.brand-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: #ffc107;
+    margin: 0 0 5px 0;
+    text-align: center;
+    font-weight: 600;
+}
+
+.brand-subtitle {
+    font-size: 0.85rem;
+    color: #a8a29e;
+    letter-spacing: 2px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-card {
+    background: #1c1512;
+    border: 1px solid #2d231e;
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.card-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align: center;
+    color: #ffffff;
+    margin: 0 0 6px 0;
+}
+
+.card-subtitle {
+    font-size: 0.85rem;
+    color: #85756e;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-label-custom {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #a8a29e;
+    margin-bottom: 8px;
+}
+
+.input-group-custom {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    color: #85756e;
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    background-color: #271f1b;
+    border: 1px solid #3c2f29;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-input:focus {
+    border-color: #ff9800;
+    background-color: #2e241f;
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15);
+}
+
+.form-input::placeholder {
+    color: #655650;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: #ff9800;
+    color: #110502;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    background-color: #f57c00;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+
+/* Custom error/alert messages */
+.alert-custom {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    font-size: 0.88rem;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.alert-warning-custom {
+    background-color: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+    font-size: 0.88rem;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Puntos de intentos fallidos */
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4b4542;
+    /* Gris por defecto */
+    transition: background-color 0.3s ease;
+}
+
+.dot.active {
+    background-color: #ef4444;
+    /* Rojo cuando hay error */
+}
+
+.style-attempts-text {
+    font-size: 0.85rem;
+    color: #85756e !important;
+}
+
+/* Tarjeta interna de bloqueo */
+.block-card {
+    background-color: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.block-icon {
+    font-size: 2.5rem;
+    color: #ef4444;
+    margin-bottom: 12px;
+}
+
+.block-title {
+    font-size: 1.1rem;
+    color: #f87171;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.block-timer-badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid #ff9800;
+    color: #ff9800;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    margin-top: 15px;
+}
+
+/* Barra de progreso de restablecimiento */
+.progress-container {
+    width: 100%;
+    height: 6px;
+    background-color: #271f1b;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress-bar-custom {
+    height: 100%;
+    width: 100%;
+    background-color: #ff9800;
+    transition: width 1s linear;
+}
+
+/* Botón de acceso para clientes sin login */
+.btn-client-access {
+    background-color: #11363c;
+    border: 1px solid #1a515a;
+    color: #5ce1e6;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-client-access:hover {
+    background-color: #1a515a;
+    box-shadow: 0 0 10px rgba(92, 225, 230, 0.2);
+}

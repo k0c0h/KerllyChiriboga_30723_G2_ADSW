@@ -1,0 +1,202 @@
+<div class="container-fluid">
+
+    <h2 class="fw-bold mb-4">
+
+        Dashboard
+
+    </h2>
+
+    <div class="row g-4">
+
+        <div class="col-lg-3">
+
+            <div class="card shadow">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Ventas del día
+
+                    </h6>
+
+                    <h2 id="lblVentas">
+
+                        $0
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="card shadow">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Pedidos activos
+
+                    </h6>
+
+                    <h2 id="lblPedidos">
+
+                        0
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="card shadow">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Mesas ocupadas
+
+                    </h6>
+
+                    <h2 id="lblMesas">
+
+                        0
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="card shadow">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Clientes
+
+                    </h6>
+
+                    <h2 id="lblClientes">
+
+                        0
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row mt-4">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    Ventas
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="graficoVentas">
+
+                    </canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    Productos más vendidos
+
+                </div>
+
+                <div class="card-body">
+
+                    <div id="productosTop">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row mt-4">
+
+        <div class="col-lg-12">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    Últimos pedidos
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-hover">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Mesa</th>
+
+                                <th>Total</th>
+
+                                <th>Estado</th>
+
+                                <th>Hora</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tablaUltimosPedidos">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

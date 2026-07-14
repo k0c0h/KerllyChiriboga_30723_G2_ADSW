@@ -1,0 +1,101 @@
+<div class="container-fluid">
+
+    <div class="card shadow">
+
+        <div class="card-header d-flex justify-content-between">
+
+            <h3>
+
+                Reporte de Ventas
+
+            </h3>
+
+            <div>
+
+                <button
+                    class="btn btn-danger"
+                    id="btnPDF">
+
+                    PDF
+
+                </button>
+
+                <button
+                    class="btn btn-success"
+                    id="btnExcel">
+
+                    Excel
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+
+                <div class="col">
+
+                    <input
+                        type="date"
+                        id="fechaInicio"
+                        class="form-control">
+
+                </div>
+
+                <div class="col">
+
+                    <input
+                        type="date"
+                        id="fechaFin"
+                        class="form-control">
+
+                </div>
+
+                <div class="col">
+
+                    <button
+                        class="btn btn-primary"
+                        id="btnBuscar">
+
+                        Buscar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <table class="table table-striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Fecha</th>
+
+                        <th>Mesa</th>
+
+                        <th>Total</th>
+
+                        <th>Estado</th>
+
+                        <th>Factura</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tablaReportes">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
