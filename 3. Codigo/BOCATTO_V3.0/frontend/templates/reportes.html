@@ -1,0 +1,137 @@
+<div class="container-fluid">
+
+    <!-- Tarjetas de Resumen (Reporte Adicional) -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="card bg-white border-0 shadow-sm text-center py-3">
+                <div class="card-body p-1">
+                    <span class="text-muted small text-uppercase fw-semibold">Efectivo</span>
+                    <h3 class="fw-bold text-success mt-1 mb-0" id="resumenEfectivo">$0.00</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card bg-white border-0 shadow-sm text-center py-3">
+                <div class="card-body p-1">
+                    <span class="text-muted small text-uppercase fw-semibold">Digital / Transf.</span>
+                    <h3 class="fw-bold text-primary mt-1 mb-0" id="resumenTransferencia">$0.00</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card bg-white border-0 shadow-sm text-center py-3">
+                <div class="card-body p-1">
+                    <span class="text-muted small text-uppercase fw-semibold">Tarjeta</span>
+                    <h3 class="fw-bold text-info mt-1 mb-0" id="resumenTarjeta">$0.00</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card bg-white border-0 shadow-sm text-center py-3">
+                <div class="card-body p-1">
+                    <span class="text-muted small text-uppercase fw-semibold">Ventas Totales</span>
+                    <h3 class="fw-bold text-dark mt-1 mb-0" id="resumenTotal">$0.00</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow">
+
+        <div class="card-header d-flex justify-content-between">
+
+            <h3 class="fw-bold mb-0">
+
+                Reporte de Ventas
+
+            </h3>
+
+            <div>
+
+                <button
+                    class="btn btn-danger"
+                    id="btnPDF">
+
+                    PDF
+
+                </button>
+
+                <button
+                    class="btn btn-success"
+                    id="btnExcel">
+
+                    Excel
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+
+                <div class="col">
+
+                    <input
+                        type="date"
+                        id="fechaInicio"
+                        class="form-control">
+
+                </div>
+
+                <div class="col">
+
+                    <input
+                        type="date"
+                        id="fechaFin"
+                        class="form-control">
+
+                </div>
+
+                <div class="col">
+
+                    <button
+                        class="btn btn-primary"
+                        id="btnBuscar">
+
+                        Buscar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <table class="table table-striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Fecha</th>
+
+                        <th>Mesa</th>
+
+                        <th>Total</th>
+
+                        <th>Estado</th>
+
+                        <th>Factura</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tablaReportes">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

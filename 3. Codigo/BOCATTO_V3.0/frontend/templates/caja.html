@@ -1,0 +1,27 @@
+<div class="container-fluid py-3">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark mb-0">Caja</h2>
+        <span class="badge bg-success fs-6">
+            Gestión de Cobro y Entrega (RF-06)
+        </span>
+    </div>
+
+    <!-- Buscador de pedidos por número de mesa o canal (Requisito Funcional RF-06) -->
+    <div class="row mb-4">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" id="txtBuscarMesaCaja" class="form-control border-start-0" 
+                       placeholder="Buscar por número de mesa o canal (ej: 3, mesa, teléfono)...">
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4" id="contenedorCaja">
+        <!-- Render dinámico de tarjetas de cobro/entrega -->
+    </div>
+
+</div>

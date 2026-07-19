@@ -1,0 +1,212 @@
+<div class="container-fluid py-3">
+
+    <!-- 1. PANTALLA PRINCIPAL: SELECCIÓN DE MESA/TELÉFONO & PEDIDOS ACTIVOS -->
+    <div id="pantallaPrincipalPedidos">
+        
+        <!-- Pestañas -->
+        <ul class="nav nav-tabs mb-4" id="pedidosTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active fw-semibold" id="tabNuevo-tab" data-bs-toggle="tab" data-bs-target="#tabNuevo" type="button" role="tab">
+                    <i class="bi bi-plus-circle me-2"></i>Nuevo Pedido
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-semibold" id="tabActivos-tab" data-bs-toggle="tab" data-bs-target="#tabActivos" type="button" role="tab">
+                    <i class="bi bi-clock-history me-2"></i>Pedidos Activos
+                </button>
+            </li>
+        </ul>
+
+        <!-- Contenido de las pestañas -->
+        <div class="tab-content" id="pedidosTabsContent">
+            
+            <!-- PESTAÑA NUEVO PEDIDO -->
+            <div class="tab-pane fade show active" id="tabNuevo" role="tabpanel">
+                
+                <!-- Sección para Operador / Admin (Pedido Telefónico) -->
+                <div id="seccionTelefono" class="card shadow-sm border-0 mb-4 p-4 text-white" 
+                     style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-radius: 12px; display: none;">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="fw-bold mb-1"><i class="bi bi-telephone-inbound me-2"></i>Canal de Pedidos Telefónicos</h4>
+                            <p class="mb-0 text-white-50">Registre llamadas entrantes de clientes para envíos a domicilio o retiros.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <button id="btnIniciarPedidoTelefono" class="btn btn-light text-primary fw-bold btn-lg shadow-sm">
+                                <i class="bi bi-plus-lg me-1"></i>Iniciar Pedido
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Mesas para Mesero / Admin -->
+                <div id="seccionMesas">
+                    <h4 class="fw-bold text-dark mb-3"><i class="bi bi-grid-3x3-gap me-2"></i>Mesas del Salón</h4>
+                    <div class="row g-3" id="gridMesasPedidos">
+                        <!-- Render dinámico de mesas desde JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- PESTAÑA PEDIDOS ACTIVOS -->
+            <div class="tab-pane fade" id="tabActivos" role="tabpanel">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Canal</th>
+                                        <th>Mesa / Teléfono</th>
+                                        <th>Cliente</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th class="text-end">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaPedidosActivos">
+                                    <!-- Render dinámico de pedidos activos desde JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 2. PANTALLA CREAR / VER DETALLE PEDIDO (OCULTA POR DEFECTO) -->
+    <div id="pantallaCrearPedido" style="display: none;">
+        
+        <!-- Encabezado con Botón de Regreso -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <button id="btnVolverPedidos" class="btn btn-outline-dark fw-semibold">
+                <i class="bi bi-arrow-left me-1"></i>Volver a Pedidos
+            </button>
+            <h3 class="fw-bold text-dark mb-0" id="tituloPaginaPedido">Nuevo Pedido</h3>
+        </div>
+
+        <div class="row">
+            <!-- PRODUCTOS -->
+            <div class="col-lg-7 col-xl-8">
+                <div class="card shadow border-0 mb-4">
+                    <div class="card-header bg-white py-3 border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="fw-bold text-dark mb-0">Menú</h5>
+                            <input class="form-control w-50" id="txtBuscarProductoPedido" placeholder="Buscar producto...">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3" id="productosPedido">
+                            <!-- Productos dinámicos -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULARIO & DETALLE DEL CARRO -->
+            <div class="col-lg-5 col-xl-4">
+                <div class="card shadow border-0 h-100">
+                    <div class="card-header text-white py-3 border-0" id="headerDetallePedido" style="background: var(--naranja-500);">
+                        <h5 class="fw-bold mb-0">Resumen del Pedido</h5>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- Canal (Mesa vs Teléfono) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Canal</label>
+                            <select class="form-select" id="canalPedido" disabled>
+                                <option value="MESA">Mesa</option>
+                                <option value="TELEFONO">Telefónico</option>
+                            </select>
+                        </div>
+
+                        <!-- Campos para pedido Telefónico -->
+                        <div id="camposTelefono" style="display: none;">
+                            <div class="mb-2">
+                                <label class="form-label fw-semibold">Nombre Cliente</label>
+                                <input id="clienteNombre" class="form-control" placeholder="Ej: Ana María">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-semibold">Teléfono de Contacto</label>
+                                <input id="telefonoEntrega" class="form-control" placeholder="0999999999">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Dirección de Entrega</label>
+                                <input id="direccionEntrega" class="form-control" placeholder="Calle Principal y Secundaria">
+                            </div>
+                        </div>
+
+                        <!-- Campo para Observaciones Generales del Pedido (CU 0-2 / RF-03) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Observaciones Generales</label>
+                            <textarea id="observacionesGenerales" class="form-control" rows="2" placeholder="Indicaciones para el despacho u orden..."></textarea>
+                        </div>
+
+                        <h5 class="fw-bold text-dark mt-4 mb-2" id="tituloMesa">Mesa -</h5>
+                        
+                        <!-- Tabla del Carro -->
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Cant.</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detallePedido">
+                                    <!-- Items agregados dinámicos -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="fw-bold text-dark mb-0">Total:</h4>
+                            <h3 class="fw-bold text-warning mb-0">$<span id="lblTotal">0.00</span></h3>
+                        </div>
+
+                        <button class="btn btn-success w-100 py-3 fw-bold shadow-sm" id="btnGuardarPedido">
+                            <i class="bi bi-check-circle me-1"></i>Guardar Pedido
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal Observación para Items -->
+<div class="modal fade" id="modalObservacion" tabindex="-1" aria-labelledby="labelModalObservacion" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header text-white" style="background: var(--naranja-500);">
+                <h5 class="modal-title" id="labelModalObservacion">
+                    <i class="bi bi-chat-left-text me-2"></i>Observación del Producto
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label class="form-label fw-semibold">Nota especial (ej: sin cebolla, término de cocción):</label>
+                <textarea id="txtObservacion" class="form-control" rows="3" maxlength="200" placeholder="Escribe aquí..."></textarea>
+                <div class="form-text text-end" id="contadorObservacion">0 / 200</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning text-white fw-bold" id="btnGuardarObservacion">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

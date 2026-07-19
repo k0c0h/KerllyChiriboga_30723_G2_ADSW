@@ -1,0 +1,474 @@
+/* ============================================================
+   BOCATTO - App CSS | Paleta: café, naranja, verde
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* --- RESET & BASE ------------------------------------------ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Café / Marrón */
+    --cafe-900: #1a0e07;
+    --cafe-800: #2c1a0f;
+    --cafe-700: #3d2514;
+    --cafe-600: #5c3920;
+    --cafe-500: #7a4f2d;
+    --cafe-400: #9a6a42;
+    --cafe-200: #d4b896;
+    --cafe-100: #f5ede3;
+
+    /* Naranja */
+    --naranja-600: #c8640a;
+    --naranja-500: #e8740f;
+    --naranja-400: #f59332;
+    --naranja-300: #fdb96a;
+    --naranja-100: #fff3e0;
+
+    /* Verde */
+    --verde-700: #1b5e30;
+    --verde-500: #2e7d52;
+    --verde-400: #4caf7a;
+    --verde-300: #7dcfa0;
+    --verde-100: #e8f5ee;
+
+    /* Neutros */
+    --text-dark: #1a0e07;
+    --text-mid: #5c3920;
+    --text-light: #9a8070;
+    --bg-page: #faf7f3;
+    --bg-card: #ffffff;
+    --border: rgba(122, 79, 45, 0.15);
+
+    --sidebar-w: 260px;
+    --navbar-h: 64px;
+
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 2px 12px rgba(28, 14, 7, 0.10);
+    --shadow-md: 0 4px 20px rgba(28, 14, 7, 0.15);
+}
+
+html, body { height: 100%; }
+
+body {
+    background: var(--bg-page);
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+    color: var(--text-dark);
+    overflow: hidden;
+}
+
+/* --- LAYOUT ------------------------------------------------- */
+.layout {
+    display: flex;
+    min-height: 100vh;
+    max-height: 100vh;
+}
+
+/* --- SIDEBAR ------------------------------------------------ */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--cafe-800);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Logo */
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 22px 20px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    background: var(--naranja-500);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 8px rgba(232, 116, 15, 0.35);
+}
+
+.logo-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
+}
+
+/* Sidebar navigation */
+.sidebar-nav { flex: 1; padding: 12px; }
+
+#sidebar ul.menu {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+#sidebar li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: rgba(255,255,255,0.75);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.18s ease;
+}
+
+#sidebar li a:hover {
+    background: rgba(232, 116, 15, 0.18);
+    color: var(--naranja-300);
+}
+
+#sidebar li a.active {
+    background: var(--naranja-600);
+    color: #fff;
+}
+
+#sidebar li a i {
+    font-size: 1.05rem;
+    width: 18px;
+    text-align: center;
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+}
+
+.user-avatar i {
+    font-size: 1.8rem;
+    color: var(--naranja-300);
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.user-details strong {
+    font-size: 0.85rem;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-details small {
+    font-size: 0.72rem;
+    color: var(--cafe-200);
+    letter-spacing: 0.5px;
+}
+
+.btn-logout {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 14px;
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.btn-logout:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.7);
+    color: #f87171;
+}
+
+/* --- MAIN CONTENT ------------------------------------------- */
+.contenido-principal {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#navbar { flex-shrink: 0; }
+
+#contenido {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* --- NAVBAR ------------------------------------------------- */
+.app-navbar {
+    height: var(--navbar-h);
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: var(--shadow);
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--cafe-700);
+}
+
+.navbar-brand svg { color: var(--naranja-500); }
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-text {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-text strong {
+    font-size: 0.9rem;
+    color: var(--cafe-700);
+    font-weight: 600;
+}
+
+.user-text small {
+    font-size: 0.72rem;
+    color: var(--naranja-600);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.btn-nav-logout {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #ef4444;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.btn-nav-logout:hover {
+    background: rgba(239,68,68,0.08);
+}
+
+/* --- LOADER ------------------------------------------------- */
+.loader-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(250, 247, 243, 0.7);
+    z-index: 99999;
+    backdrop-filter: blur(3px);
+}
+
+/* --- BOCATTO BUTTON ----------------------------------------- */
+.btn-bocatto {
+    background: var(--naranja-500);
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.18s;
+}
+
+.btn-bocatto:hover {
+    background: var(--naranja-600);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(200, 100, 10, 0.25);
+}
+
+/* Bootstrap overrides to match palette */
+.btn-warning {
+    background-color: var(--naranja-500) !important;
+    border-color: var(--naranja-500) !important;
+    color: #fff !important;
+}
+
+.btn-warning:hover {
+    background-color: var(--naranja-600) !important;
+    border-color: var(--naranja-600) !important;
+}
+
+.btn-success {
+    background-color: var(--verde-500) !important;
+    border-color: var(--verde-500) !important;
+}
+
+.btn-success:hover {
+    background-color: var(--verde-700) !important;
+    border-color: var(--verde-700) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--naranja-400) !important;
+    color: #fff !important;
+}
+
+.card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.card-header {
+    border-bottom: 1px solid var(--border);
+}
+
+.card-header.bg-warning {
+    background-color: var(--naranja-500) !important;
+    color: #fff;
+}
+
+.table thead.table-dark th {
+    background-color: var(--cafe-700) !important;
+    color: #fff;
+}
+
+/* --- OBSERVATIONS BADGE ------------------------------------ */
+.obs-badge {
+    display: inline-block;
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: var(--naranja-100);
+    color: var(--naranja-600);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin-top: 2px;
+    vertical-align: middle;
+}
+
+/* --- DASHBOARD CARDS --------------------------------------- */
+.dashboard-card {
+    transition: all 0.25s ease;
+    cursor: default;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+/* --- RESPONSIVE -------------------------------------------- */
+@media (max-width: 1024px) {
+    :root { --sidebar-w: 220px; }
+}
+
+@media (max-width: 768px) {
+    body { overflow: auto; }
+
+    .layout {
+        flex-direction: column;
+        max-height: none;
+        min-height: 100vh;
+    }
+
+    #sidebar {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex-direction: row;
+        flex-wrap: wrap;
+        height: auto;
+        min-height: auto;
+    }
+
+    .sidebar-logo { padding: 12px 16px; flex: 0; }
+    .sidebar-nav { flex: 1; padding: 6px 12px; overflow-x: auto; }
+
+    #sidebar ul.menu {
+        flex-direction: row;
+        gap: 4px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    #sidebar li a {
+        padding: 7px 10px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    #sidebar li a span { display: none; }
+
+    .sidebar-footer { display: none; }
+
+    .contenido-principal {
+        height: auto;
+        min-height: 0;
+        flex: 1;
+    }
+
+    #contenido { padding: 14px; overflow: visible; }
+
+    .app-navbar { padding: 0 14px; }
+    .navbar-brand span { display: none; }
+    .user-text strong { font-size: 0.78rem; }
+}
+
+@media (max-width: 480px) {
+    #contenido { padding: 10px; }
+    h2.fw-bold { font-size: 1.2rem; }
+}
