@@ -1,4 +1,4 @@
-const API_PUBLIC = "http://localhost:3000/api/v1/public";
+const API_PUBLIC = "https://bocatto-2gaz.onrender.com/api/v1/public";
 
 // DOM refs
 const mesaInfo = document.getElementById("mesaInfo");
