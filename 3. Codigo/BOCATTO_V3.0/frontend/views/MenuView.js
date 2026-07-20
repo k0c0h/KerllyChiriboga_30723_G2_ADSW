@@ -61,6 +61,14 @@ class MenuView {
 
     }
 
+    llenarFormularioComoCopia(producto) {
+
+        this.llenarFormulario(producto);
+        Form.asignar("productoId", "");
+        Form.asignar("productoNombre", `${producto.nombre} (copia)`);
+
+    }
+
     abrirModal() {
 
         Modal.abrir(this.modalId);
@@ -83,6 +91,7 @@ class MenuView {
 
         const rol = Auth.rol();
         const esLectura = (rol === "MESERO" || rol === "OPERADOR");
+        const esAdmin = rol === "ADMIN";
 
         const btnNuevo = document.getElementById("btnNuevoProducto");
         if (btnNuevo) {
@@ -113,6 +122,19 @@ class MenuView {
                             Editar
 
                         </button>
+
+                        ${esAdmin ? `
+                        <button
+
+                            class="btn btn-info btnClonar"
+
+                            data-id="${producto._id}">
+
+                            <i class="bi bi-copy"></i>
+
+                            Clonar
+
+                        </button>` : ""}
 
                         <button
 

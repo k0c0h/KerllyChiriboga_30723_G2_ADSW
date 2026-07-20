@@ -33,6 +33,17 @@ class PromocionController {
         }
     }
 
+    
+    async clonar(req, res, next) {
+        try {
+            const promocion = await PromocionService.clonarPromocion(req.params.id, req.body);
+            ApiResponse.success(res, "Promoci\u00f3n clonada correctamente.", promocion, 201);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    
     async actualizar(req, res, next) {
         try {
             const promocion = await PromocionService.actualizarPromocion(req.params.id, req.body);

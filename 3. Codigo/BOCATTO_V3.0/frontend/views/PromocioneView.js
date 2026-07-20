@@ -32,6 +32,12 @@ class PromocionView {
         document.getElementById("promocionActiva").checked = p.activa;
     }
 
+    llenarFormularioComoCopia(p) {
+        this.llenarFormulario(p);
+        document.getElementById("promocionId").value = "";
+        document.getElementById("promocionNombre").value = `${p.nombre} (copia)`;
+    }
+
     abrirModal() { Modal.abrir(this.modalId); }
     cerrarModal() { Modal.cerrar(this.modalId); }
 
@@ -39,6 +45,7 @@ class PromocionView {
         const contenedor = document.getElementById("contenedorPromociones");
         if (!contenedor) return;
         contenedor.innerHTML = "";
+        const esAdmin = Auth.rol() === "ADMIN";
 
         if (promociones.length === 0) {
             contenedor.innerHTML = `
@@ -73,6 +80,9 @@ class PromocionView {
                         <button class="btn btn-warning btn-sm flex-fill btnEditarPromocion" data-id="${p._id}">
                             <i class="bi bi-pencil"></i> Editar
                         </button>
+                        ${esAdmin ? `<button class="btn btn-info btn-sm flex-fill btnClonarPromocion" data-id="${p._id}">
+                            <i class="bi bi-copy"></i> Clonar
+                        </button>` : ""}
                         <button class="btn btn-danger btn-sm flex-fill btnEliminarPromocion" data-id="${p._id}">
                             <i class="bi bi-trash"></i> Eliminar
                         </button>

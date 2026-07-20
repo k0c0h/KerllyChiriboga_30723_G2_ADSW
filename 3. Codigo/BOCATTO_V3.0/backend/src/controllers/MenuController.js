@@ -43,6 +43,34 @@ class MenuController {
 
     }
 
+    async obtener(req, res, next) {
+
+        try {
+
+            const producto = await MenuService.obtenerProducto(req.params.id);
+
+            if (!producto) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Producto no encontrado.",
+                    data: null
+                });
+            }
+
+            ApiResponse.success(
+                res,
+                "Producto obtenido correctamente.",
+                producto
+            );
+
+        } catch (error) {
+
+            next(error);
+
+        }
+
+    }
+
     async crear(req, res, next) {
 
         try {
@@ -63,6 +91,29 @@ class MenuController {
         }
 
     }
+
+    async clonar(req, res, next) {
+
+        try {
+
+            const producto = await MenuService.clonarProducto(req.params.id, req.body);
+
+            ApiResponse.success(
+                res,
+                "Producto clonado correctamente.",
+                producto,
+                201
+            );
+
+        } catch (error) {
+
+            next(error);
+
+        }
+
+    }
+
+
 
 }
 

@@ -10,9 +10,11 @@ class MenuPrototype extends Prototype {
 
     }
 
-    clone() {
+    clone(cambios = {}) {
 
-        return JSON.parse(JSON.stringify(this.menu));
+        const datos = this.prepararDatos(this.menu);
+
+        return this.aplicarCambios(datos, cambios);
 
     }
 

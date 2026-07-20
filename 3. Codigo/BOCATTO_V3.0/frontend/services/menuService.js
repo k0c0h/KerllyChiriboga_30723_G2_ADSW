@@ -52,6 +52,22 @@ class MenuService {
 
     }
 
+    async clonar(id, producto) {
+
+        const r = await fetch(`${API}/menu/${id}/clonar`, {
+
+            method: "POST",
+
+            headers: this.headers,
+
+            body: JSON.stringify(producto)
+
+        });
+
+        return await r.json();
+
+    }
+
     async actualizar(id, producto) {
 
         const r = await fetch(`${API}/menu/${id}`, {

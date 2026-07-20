@@ -29,6 +29,17 @@ class PromocionesService {
         return await r.json();
     }
 
+    
+    async clonar(id, datos) {
+        const r = await fetch(`${API}/promociones/${id}/clonar`, {
+            method: "POST",
+            headers: this.headers,
+            body: JSON.stringify(datos)
+        });
+        return await r.json();
+    }
+
+
     async actualizar(id, datos) {
         const r = await fetch(`${API}/promociones/${id}`, {
             method: "PUT",

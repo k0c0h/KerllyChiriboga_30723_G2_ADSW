@@ -9,6 +9,7 @@ import Alert from "../utils/Alert.js";
 class MenuController {
 
     productos = [];
+    productoOrigenClon = null;
 
     async init() {
 
@@ -25,6 +26,8 @@ class MenuController {
             .getElementById("btnNuevoProducto")
 
             .addEventListener("click", () => {
+
+                this.productoOrigenClon = null;
 
                 MenuView.limpiarFormulario();
 
@@ -120,7 +123,17 @@ class MenuController {
 
         let respuesta;
 
-        if (producto.id === "") {
+        if (this.productoOrigenClon) {
+
+            respuesta = await MenuService.clonar(
+
+                this.productoOrigenClon,
+
+                producto
+
+            );
+
+        } else if (producto.id === "") {
 
             respuesta = await MenuService.crear(producto);
 
@@ -148,6 +161,8 @@ class MenuController {
 
         Toast.success("Producto guardado correctamente");
 
+        this.productoOrigenClon = null;
+
         MenuView.cerrarModal();
 
         await this.listar();
@@ -164,6 +179,8 @@ class MenuController {
 
         if (boton.classList.contains("btnEditar")) {
 
+            this.productoOrigenClon = null;
+
             Loader.mostrar();
 
             const respuesta = await MenuService.obtener(id);
@@ -171,6 +188,30 @@ class MenuController {
             Loader.ocultar();
 
             MenuView.llenarFormulario(respuesta.data);
+
+            MenuView.abrirModal();
+
+        }
+
+        if (boton.classList.contains("btnClonar")) {
+
+            Loader.mostrar();
+
+            const respuesta = await MenuService.obtener(id);
+
+            Loader.ocultar();
+
+            if (!respuesta.success) {
+
+                Toast.error(respuesta.message);
+
+                return;
+
+            }
+
+            this.productoOrigenClon = id;
+
+            MenuView.llenarFormularioComoCopia(respuesta.data);
 
             MenuView.abrirModal();
 

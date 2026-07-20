@@ -8,6 +8,8 @@ class PromocionController {
 
     promociones = [];
     _abortController = null;
+    promocionOrigenClon = null;
+
 
     async init() {
         // Limpiar listeners anteriores para evitar duplicados al re-navegar
@@ -23,6 +25,7 @@ class PromocionController {
 
     registrarEventos(signal) {
         document.getElementById("btnNuevaPromocion").addEventListener("click", () => {
+            this.promocionOrigenClon = null;
             PromocionView.limpiarFormulario();
             PromocionView.abrirModal();
         }, { signal });
@@ -64,7 +67,9 @@ class PromocionController {
         Loader.mostrar();
         try {
             let respuesta;
-            if (datos.id === "") {
+            if (this.promocionOrigenClon) {
+                respuesta = await PromocionesService.clonar(this.promocionOrigenClon, datos);
+            } else if (datos.id === "") {
                 respuesta = await PromocionesService.crear(datos);
             } else {
                 respuesta = await PromocionesService.actualizar(datos.id, datos);
@@ -76,6 +81,7 @@ class PromocionController {
             }
 
             Toast.success("Promoción guardada correctamente.");
+            this.promocionOrigenClon = null;
             PromocionView.cerrarModal();
             await this.listar();
         } catch (err) {
@@ -92,6 +98,8 @@ class PromocionController {
         const id = boton.dataset.id;
 
         if (boton.classList.contains("btnEditarPromocion")) {
+            this.promocionOrigenClon = null;
+
             Loader.mostrar();
             try {
                 const respuesta = await PromocionesService.obtener(id);
@@ -103,6 +111,24 @@ class PromocionController {
                 PromocionView.abrirModal();
             } catch (err) {
                 Toast.error("Error de conexión.");
+            } finally {
+                Loader.ocultar();
+            }
+        }
+
+        if (boton.classList.contains("btnClonarPromocion")) {
+            Loader.mostrar();
+            try {
+                const respuesta = await PromocionesService.obtener(id);
+                if (!respuesta.success) {
+                    Toast.error(respuesta.message || "No se pudo obtener la promociÃ³n.");
+                    return;
+                }
+                this.promocionOrigenClon = id;
+                PromocionView.llenarFormularioComoCopia(respuesta.data);
+                PromocionView.abrirModal();
+            } catch (err) {
+                Toast.error("Error de conexiÃ³n.");
             } finally {
                 Loader.ocultar();
             }

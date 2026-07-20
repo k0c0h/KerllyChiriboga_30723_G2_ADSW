@@ -1,6 +1,6 @@
 # 🍽️ Bocatto — Sistema de Gestión de Pedidos
 
-Sistema web de gestión de pedidos para el restaurante **Bocatto Valley**, desarrollado como proyecto de Ingeniería de Software con metodología **Agile Unified Process (AUP)** e implementación de los patrones de diseño creacionales **Builder** y **Prototype**.
+Sistema web de gestión de pedidos para el restaurante **Bocatto Valley**, desarrollado como proyecto de Ingeniería de Software con metodología **SCRUM** e implementación de los patrones de diseño creacionales **Builder** y **Prototype**.
 
 ---
 
@@ -32,11 +32,11 @@ Bocatto digitaliza y automatiza el flujo completo de atención del restaurante: 
 **Credenciales de prueba (seeder):**
 | Usuario | Contraseña | Rol |
 |---------|------------|-----|
-| `admin` | `123456` | ADMIN |
-| `mesero` | `123456` | MESERO |
-| `operador` | `123456` | OPERADOR |
-| `cocina` | `123456` | COCINA |
-| `caja` | `123456` | CAJA |
+| `admin` | `********` | ADMIN |
+| `mesero` | `********` | MESERO |
+| `operador` | `********` | OPERADOR |
+| `cocina` | `********` | COCINA |
+| `caja` | `********` | CAJA |
 
 
 ---
@@ -146,13 +146,14 @@ Prototype (base)
 
 PrototypeRegistry       ← Registro central
     .registrar(nombre, objeto)  ← Registra un prototipo
-    .obtener(nombre)            ← Devuelve una copia clonada (sin modificar el original)
+    .obtener(nombre, cambios)   ← Devuelve una copia clonada (sin modificar el original)
 ```
 
 **Beneficios aplicados:**
 - ✅ Creación de combos sin instanciar desde cero
 - ✅ El administrador configura una vez; el sistema clona en runtime
 - ✅ Reduce jerarquías de fábricas y subclases
+- ✅ Desde la interfaz, el administrador selecciona **Clonar**, ajusta la copia y la guarda como una entidad nueva
 
 ---
 
@@ -162,11 +163,14 @@ PrototypeRegistry       ← Registro central
 |--------|------|---------------|-------------|
 | `POST` | `/api/v1/auth/login` | Público | Iniciar sesión |
 | `GET` | `/api/v1/menu` | Autenticado | Listar productos del menú |
+| `GET` | `/api/v1/menu/:id` | Autenticado | Obtener un producto del menú |
+| `POST` | `/api/v1/menu/:id/clonar` | ADMIN | Clonar un producto; el cuerpo puede sobrescribir los campos de la copia |
 | `POST` | `/api/v1/pedidos` | MESERO, OPERADOR | Crear pedido |
 | `GET` | `/api/v1/pedidos` | ADMIN, MESERO, OPERADOR | Listar pedidos |
 | `PUT` | `/api/v1/pedidos/:id/estado` | COCINA, CAJA | Cambiar estado |
 | `GET` | `/api/v1/promociones` | ADMIN | Listar promociones |
 | `POST` | `/api/v1/promociones` | ADMIN | Crear promoción |
+| `POST` | `/api/v1/promociones/:id/clonar` | ADMIN | Clonar una promoción; el cuerpo puede sobrescribir los campos de la copia |
 | `PUT` | `/api/v1/promociones/:id` | ADMIN | Editar promoción |
 | `DELETE` | `/api/v1/promociones/:id` | ADMIN | Eliminar promoción |
 | `GET` | `/api/v1/public/mesas/:id/menu` | Público (QR) | Ver menú de una mesa |
@@ -205,68 +209,6 @@ Para el acceso QR, usa `frontend/qr.html?mesa=<ID_MESA>`.
 
 ---
 
-## ☁️ Despliegue en Render
-
-### Backend — Web Service (Node.js)
-
-1. Sube el proyecto a un repositorio en GitHub.
-2. En [render.com](https://render.com), crea un nuevo **Web Service**.
-3. Conecta el repositorio.
-4. Configura:
-   - **Root directory:** `backend`
-   - **Runtime:** Node
-   - **Build Command:** `npm install`
-   - **Start Command:** `node src/server.js`
-5. En **Environment Variables**, agrega:
-   ```
-   PORT=10000
-   MONGO_URI=<tu_string_de_MongoDB_Atlas>
-   JWT_SECRET=<secreto_seguro>
-   ```
-6. Haz clic en **Create Web Service**.
-
-> ⚠️ **Importante:** El plan gratuito de Render "duerme" el servicio después de 15 minutos sin tráfico. Usa **UptimeRobot** (gratis) para hacer ping cada 14 minutos y mantenerlo activo.
-
----
-
-### Frontend — Static Site
-
-1. En Render, crea un nuevo **Static Site**.
-2. Conecta el mismo repositorio.
-3. Configura:
-   - **Root directory:** `frontend`
-   - **Build Command:** *(vacío, no hay build)*
-   - **Publish directory:** `.` (raíz de frontend)
-4. Render te dará una URL pública tipo `https://bocatto-frontend.onrender.com`.
-
-### Actualizar la URL del backend en el frontend
-
-Después de desplegar el backend, cambia la URL base en el frontend:
-
-**`frontend/services/api.js`**
-```js
-// Antes (local)
-const API = "http://localhost:3000/api/v1";
-
-// Después (Render)
-const API = "https://bocatto-backend.onrender.com/api/v1";
-```
-
-**`frontend/assets/js/qr-order.js`** (línea 1):
-```js
-const API_PUBLIC = "https://bocatto-backend.onrender.com/api/v1/public";
-```
-
-**`frontend/index.html`** (Socket.io):
-```html
-<!-- Antes -->
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
-<!-- Después -->
-<script src="https://bocatto-backend.onrender.com/socket.io/socket.io.js"></script>
-```
-
----
-
 ## 📦 Tecnologías utilizadas
 
 | Capa | Tecnología |
@@ -279,12 +221,11 @@ const API_PUBLIC = "https://bocatto-backend.onrender.com/api/v1/public";
 | UI Framework | Bootstrap 5.3 + Bootstrap Icons |
 | Fuentes | Google Fonts (Outfit, Playfair Display) |
 | Notificaciones | Toast interno + Toastify.js (QR) |
-| Metodología | Agile Unified Process (AUP) |
 | Patrones | Builder + Prototype |
 
 ---
 
 ## 👥 Equipo
 
-Proyecto académico — Sexto Semestre, Ingeniería de Software  
+Proyecto Grupo 2 — Sexto Semestre, Ingeniería de Software  
 Universidad — Grupo ADS

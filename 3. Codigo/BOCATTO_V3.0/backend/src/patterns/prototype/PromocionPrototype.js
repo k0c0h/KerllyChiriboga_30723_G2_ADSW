@@ -10,11 +10,14 @@ class PromocionPrototype extends Prototype {
 
     }
 
-    clone() {
+     clone(cambios = {}) {
 
-        return JSON.parse(JSON.stringify(this.promocion));
+        const datos = this.prepararDatos(this.promocion);
+
+        return this.aplicarCambios(datos, cambios);
 
     }
+
 
 }
 

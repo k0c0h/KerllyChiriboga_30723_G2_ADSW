@@ -8,13 +8,23 @@ class PrototypeRegistry {
 
     registrar(nombre, objeto) {
 
-        this.prototypes.set(nombre, objeto);
+        if (!nombre?.trim()) {
+            throw new TypeError("El nombre del prototype es obligatorio.");
+        }
+
+        if (!objeto || typeof objeto.clone !== "function") {
+            throw new TypeError("El objeto registrado debe implementar clone().");
+        }
+
+        this.prototypes.set(nombre.trim(), objeto);
+
+        return this;
 
     }
 
-    obtener(nombre) {
+    obtener(nombre, cambios = {}) {
 
-        const prototype = this.prototypes.get(nombre);
+        const prototype = this.prototypes.get(nombre?.trim());
 
         if (!prototype) {
 
@@ -22,7 +32,13 @@ class PrototypeRegistry {
 
         }
 
-        return prototype.clone();
+        return prototype.clone(cambios);
+
+    }
+
+    eliminar(nombre) {
+
+        return this.prototypes.delete(nombre?.trim());
 
     }
 
