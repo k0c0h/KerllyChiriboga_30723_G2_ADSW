@@ -1,5 +1,16 @@
 const API_PUBLIC = "https://bocatto-2gaz.onrender.com/api/v1/public";
 
+import {
+    moneda,
+    totalItems,
+    estadoBadgeClass,
+    agregarProductoACarrito,
+    cambiarCantidadEnCarrito,
+    quitarDeCarrito,
+    ESTADO_MENSAJES,
+    ESTADO_TIPOS
+} from "./qr-order-helpers.js";
+
 // DOM refs
 const mesaInfo = document.getElementById("mesaInfo");
 const menuGrid = document.getElementById("menuGrid");
@@ -35,9 +46,8 @@ let ultimoEstado = null; // Para detectar cambios de estado
 // Utilidades
 // ============================================================
 
-function moneda(valor) {
-    return `$${Number(valor || 0).toFixed(2)}`;
-}
+// moneda, totalItems, estadoBadgeClass, ESTADO_MENSAJES y ESTADO_TIPOS
+// se importan desde qr-order-helpers.js.
 
 /** Reemplaza window.alert con un modal estético */
 function mostrarError(msg) {
@@ -73,21 +83,8 @@ function toastEstado(mensaje, tipo = "info") {
 
 function setEstadoBadge(estado) {
     estadoBadge.className = "badge";
-
-    const clases = {
-        PENDIENTE: "text-bg-secondary",
-        COCINA:    "text-bg-warning",
-        LISTO:     "text-bg-info",
-        ENTREGADO: "text-bg-success",
-        PAGADO:    "text-bg-dark"
-    };
-
-    estadoBadge.classList.add(clases[estado] || "text-bg-dark");
+    estadoBadge.classList.add(estadoBadgeClass(estado));
     estadoBadge.textContent = estado;
-}
-
-function totalItems() {
-    return items.reduce((acc, item) => acc + item.cantidad * item.precio, 0);
 }
 
 // ============================================================
@@ -128,7 +125,7 @@ function renderCarrito() {
         carritoItems.appendChild(row);
     });
 
-    totalPedido.textContent = moneda(totalItems());
+    totalPedido.textContent = moneda(totalItems(items));
 }
 
 function renderMenu() {
@@ -157,32 +154,14 @@ function agregarProducto(productoId) {
     const producto = menu.find(p => p._id === productoId);
     if (!producto) return;
 
-    const existente = items.find(i => i.producto === productoId);
-
-    if (existente) {
-        existente.cantidad += 1;
-    } else {
-        items.push({
-            producto: producto._id,
-            nombre: producto.nombre,
-            precio: producto.precio,
-            cantidad: 1,
-            observacion: ""
-        });
-    }
-
+    items = agregarProductoACarrito(items, producto);
     renderCarrito();
 }
 
 function cambiarCantidad(index, delta) {
     if (!items[index]) return;
 
-    items[index].cantidad += delta;
-
-    if (items[index].cantidad <= 0) {
-        items.splice(index, 1);
-    }
-
+    items = cambiarCantidadEnCarrito(items, index, delta);
     renderCarrito();
 }
 
@@ -288,23 +267,9 @@ async function consultarSeguimiento() {
 
     // Detectar cambio de estado para notificar con Toastify
     if (ultimoEstado !== null && ultimoEstado !== pedido.estado) {
-        const mensajesEstado = {
-            COCINA:    "🍳 ¡Tu pedido ya está en cocina!",
-            LISTO:     "✅ ¡Tu pedido está listo! Pronto lo recibirás.",
-            ENTREGADO: "🎉 ¡Tu pedido fue entregado! Buen provecho.",
-            PAGADO:    "💳 Pedido pagado. ¡Gracias por tu visita!"
-        };
-
-        const tiposEstado = {
-            COCINA:    "warning",
-            LISTO:     "success",
-            ENTREGADO: "success",
-            PAGADO:    "info"
-        };
-
-        const msg = mensajesEstado[pedido.estado];
+        const msg = ESTADO_MENSAJES[pedido.estado];
         if (msg) {
-            toastEstado(msg, tiposEstado[pedido.estado] || "info");
+            toastEstado(msg, ESTADO_TIPOS[pedido.estado] || "info");
         }
     }
 
@@ -370,7 +335,7 @@ carritoItems.addEventListener("click", e => {
 
     if (button.dataset.action === "mas")    cambiarCantidad(index, 1);
     if (button.dataset.action === "menos")  cambiarCantidad(index, -1);
-    if (button.dataset.action === "quitar") { items.splice(index, 1); renderCarrito(); }
+    if (button.dataset.action === "quitar") { items = quitarDeCarrito(items, index); renderCarrito(); }
 });
 
 btnEnviarPedido.addEventListener("click", enviarPedido);

@@ -174,6 +174,7 @@ class PedidoBuilder {
 
         if (
             this.pedido.canal !== "TELEFONO" &&
+            this.pedido.canal !== "QR" &&
             !this.pedido.mesa
         ) {
 

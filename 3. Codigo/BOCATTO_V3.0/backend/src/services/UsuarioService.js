@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import UsuarioRepository from "../repositories/UsuarioRepository.js";
+import ApiError from "../utils/ApiError.js";
 
 class UsuarioService {
 

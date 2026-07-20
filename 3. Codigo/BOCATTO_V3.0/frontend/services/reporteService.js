@@ -5,13 +5,10 @@ class ReporteService {
 
     get headers() {
 
-        return {
-
-            "Content-Type": "application/json",
-
-            Authorization: `Bearer ${Storage.obtenerToken()}`
-
-        };
+        const token = Storage.obtenerToken();
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return headers;
 
     }
 

@@ -6,7 +6,7 @@ class PedidoValidator {
 
         const canal = (datos.canal || "MESA").toUpperCase();
 
-        if (canal !== "TELEFONO" && !datos.mesa) {
+        if (canal !== "TELEFONO" && canal !== "QR" && !datos.mesa) {
 
             throw new ApiError(
                 "Debe seleccionar una mesa.",

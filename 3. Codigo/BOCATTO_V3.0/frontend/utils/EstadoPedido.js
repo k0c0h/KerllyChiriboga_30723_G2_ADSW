@@ -2,7 +2,7 @@ class EstadoPedido{
 
     static PENDIENTE="PENDIENTE";
 
-    static COCINA="COCIN";
+    static COCINA="COCINA";
 
     static LISTO="LISTO";
 
